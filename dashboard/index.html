@@ -20,6 +20,7 @@
     </style>
     <!-- Supabase JS Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../config.js"></script>
     <!-- Chart.js Library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Lucide Icons -->
@@ -116,7 +117,9 @@
                 <div class="card overview-chart-card">
                     <div class="chart-header">
                         <h2>Análise de Fluxo</h2>
-                        <p class="subtitle">Evolução do seu saldo ao longo do mês</p>
+                        
+
+                         <p class="subtitle">Evolução do seu saldo ao longo do mês</p>
                     </div>
                     <div class="chart-container-main">
                         <canvas id="chart-home-evolution"></canvas>
@@ -271,7 +274,9 @@
                 <div class="reports-grid">
                     <!-- Income vs Expenses Bar Chart -->
                     <div class="card chart-card">
-                        <h2>Entradas vs Saídas</h2>
+                        <div class="chart-header">
+                            <h2>Entradas vs Saídas</h2>
+                        </div>
                         <div class="chart-container">
                             <canvas id="chart-income-expenses"></canvas>
                         </div>
@@ -279,7 +284,9 @@
 
                     <!-- Category Pie Chart -->
                     <div class="card chart-card">
-                        <h2>Gastos por Categoria</h2>
+                        <div class="chart-header">
+                            <h2>Gastos por Categoria</h2>
+                        </div>
                         <div class="chart-container">
                             <canvas id="chart-categories"></canvas>
                         </div>
@@ -287,7 +294,9 @@
 
                     <!-- Balance Evolution Line Chart -->
                     <div class="card chart-card full-width">
-                        <h2>Evolução do Saldo Acumulado</h2>
+                        <div class="chart-header">
+                            <h2>Evolução do Saldo Acumulado</h2>
+                        </div>
                         <div class="chart-container large">
                             <canvas id="chart-balance-evolution"></canvas>
                         </div>

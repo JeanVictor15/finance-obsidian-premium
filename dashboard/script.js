@@ -1,6 +1,5 @@
 // Finance Obsidian - Dashboard Logic
-const SUPABASE_URL = 'https://xyglpcyzqrxtnzgrshqi.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5Z2xwY3l6cXJ4dG56Z3JzaHFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczOTQxNDQsImV4cCI6MjA5Mjk3MDE0NH0.WzMnlWe-5TqwcJaa73xl-3uYkkhqBOsfwdGIgiSDctk';
+const { SUPABASE_URL, SUPABASE_KEY } = window.FINANCE_CONFIG;
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -823,20 +822,41 @@ function renderIncomeExpensesChart() {
 
     if (chartIncomeExpenses) chartIncomeExpenses.destroy();
 
+    const gradientIncome = ctx.createLinearGradient(0, 0, 0, 400);
+    gradientIncome.addColorStop(0, 'rgba(16, 185, 129, 0.4)');
+    gradientIncome.addColorStop(1, 'rgba(16, 185, 129, 0.1)');
+
+    const gradientExpense = ctx.createLinearGradient(0, 0, 0, 400);
+    gradientExpense.addColorStop(0, 'rgba(244, 63, 94, 0.4)');
+    gradientExpense.addColorStop(1, 'rgba(244, 63, 94, 0.1)');
+
     chartIncomeExpenses = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: ['Entradas', 'Saídas'],
             datasets: [{
                 data: [income, expense],
-                backgroundColor: ['#10b981', '#f43f5e'],
+                backgroundColor: [gradientIncome, gradientExpense],
+                borderColor: ['#10b981', '#f43f5e'],
+                borderWidth: 1,
                 borderRadius: 8
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+            plugins: { 
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(13, 20, 30, 0.9)',
+                    padding: 12,
+                    titleFont: { size: 14, weight: 'bold' },
+                    bodyFont: { size: 13 },
+                    displayColors: true,
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    borderWidth: 1
+                }
+            },
             scales: {
                 y: {
                     beginAtZero: true,
@@ -934,6 +954,10 @@ function renderBalanceEvolutionChart() {
 
     if (chartBalanceEvolution) chartBalanceEvolution.destroy();
 
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(16, 185, 129, 0.2)');
+    gradient.addColorStop(1, 'rgba(16, 185, 129, 0)');
+
     chartBalanceEvolution = new Chart(ctx, {
         type: 'line',
         data: {
@@ -942,20 +966,46 @@ function renderBalanceEvolutionChart() {
                 label: 'Saldo Acumulado',
                 data: dailyBalances,
                 borderColor: '#10b981',
-                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                borderWidth: 3,
+                backgroundColor: gradient,
                 fill: true,
                 tension: 0.4,
-                pointRadius: 2
+                pointRadius: 0,
+                pointHoverRadius: 6,
+                pointHoverBackgroundColor: '#10b981',
+                pointHoverBorderColor: '#fff',
+                pointHoverBorderWidth: 2
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+            plugins: { 
+                legend: { display: false },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: 'rgba(13, 20, 30, 0.9)',
+                    titleColor: '#10b981',
+                    bodyColor: '#fff',
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    borderWidth: 1,
+                    padding: 12,
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            return 'Saldo: R$ ' + context.parsed.y.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+                        }
+                    }
+                }
+            },
             scales: {
                 y: {
                     grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                    ticks: { color: '#94a3b8' }
+                    ticks: { 
+                        color: '#94a3b8',
+                        callback: function(value) { return 'R$ ' + value.toLocaleString('pt-BR'); }
+                    }
                 },
                 x: {
                     grid: { display: false },
