@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Obsidian | Carregando...</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        html, body { background: #010409 !important; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; margin: 0; }
+    </style>
+</head>
+<body>
+    <div id="loading">Carregando sua jornada financeira...</div>
+
+    <script>
+        const SUPABASE_URL = 'https://xyglpcyzqrxtnzgrshqi.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5Z2xwY3l6cXJ4dG56Z3JzaHFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczOTQxNDQsImV4cCI6MjA5Mjk3MDE0NH0.WzMnlWe-5TqwcJaa73xl-3uYkkhqBOsfwdGIgiSDctk';
+        
+        try {
+            const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+            async function route() {
+                try {
+                    const { data: { session }, error } = await supabaseClient.auth.getSession();
+                    if (error) throw error;
+                    
+                    if (session) {
+                        window.location.href = 'dashboard/index.html';
+                    } else {
+                        window.location.href = 'login/index.html';
+                    }
+                } catch (err) {
+                    console.error('Erro na rota:', err);
+                    window.location.href = 'login/index.html'; // Default to login on error
+                }
+            }
+
+            route();
+        } catch (err) {
+            console.error('Erro ao inicializar Supabase:', err);
+            document.getElementById('loading').textContent = 'Erro ao carregar o sistema. Por favor, recarregue a página.';
+        }
+    </script>
+</body>
+</html>

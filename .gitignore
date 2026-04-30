@@ -1,0 +1,16 @@
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Project specific
+.agent/
+node_modules/
+.env
+.env.local
+config.local.js

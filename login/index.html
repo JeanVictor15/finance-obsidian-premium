@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Obsidian | Login</title>
+    
+    <!-- SEO Metadata -->
+    <meta name="description" content="SIA Private Finance Obsidian - Gestão financeira de elite com estética Deep Space.">
+    <meta name="keywords" content="finance, dashboard, obsidian, deep space, financial management">
+    <meta name="author" content="SIA Private">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../theme.css">
+    <link rel="stylesheet" href="./style.css">
+    
+    <style>
+        /* Immediate theme enforcement to prevent white flash */
+        html, body { background-color: #010409 !important; color: #FFFFFF; }
+    </style>
+    
+    <!-- Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="deep-space">
+    <div class="stars-overlay"></div>
+
+    <div id="auth-section" class="auth-container">
+        <div class="brand-logo">
+            <div class="logo-icon">✦</div>
+            <h1 class="logo-text">Finance <span>Obsidian</span></h1>
+        </div>
+        
+        <div class="auth-card glass-card">
+            <div class="auth-header">
+                <h2 id="auth-title">Bem-vindo</h2>
+                <p id="auth-subtitle">Entre na sua conta para continuar</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="login-email">E-mail</label>
+                    <input type="email" id="login-email" placeholder="seu@email.com" required>
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Senha</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" id="login-btn" class="neon-btn">Entrar</button>
+            </form>
+
+            <!-- Signup Form (Hidden) -->
+            <form id="signup-form" class="hidden">
+                <div class="input-group">
+                    <label for="signup-name">Nome Completo</label>
+                    <input type="text" id="signup-name" placeholder="Como quer ser chamado?" required>
+                </div>
+                <div class="input-group">
+                    <label for="signup-email">E-mail</label>
+                    <input type="email" id="signup-email" placeholder="seu@email.com" required>
+                </div>
+                <div class="input-group">
+                    <label for="signup-password">Senha</label>
+                    <input type="password" id="signup-password" placeholder="••••••••" required>
+                </div>
+                <div class="input-group">
+                    <label for="signup-confirm-password">Confirmar Senha</label>
+                    <input type="password" id="signup-confirm-password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" id="signup-btn" class="neon-btn">Criar Conta</button>
+            </form>
+
+            <div id="auth-message"></div>
+
+            <div class="auth-footer">
+                <p id="toggle-text">Não tem uma conta? <a href="#" id="show-signup">Cadastre-se</a></p>
+            </div>
+        </div>
+
+        <div class="app-version">v1.0.0</div>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>

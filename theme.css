@@ -1,0 +1,163 @@
+/* Deep Space Finance - Global Design System */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
+
+:root {
+    /* Colors - Solar System Palette */
+    --bg-deep: #010409;
+    --bg-surface: rgba(13, 20, 30, 0.95); /* Deeper blue-tinted surface */
+    --bg-surface-solid: #0d141e;
+    
+    --primary: #00F2FF; /* Solar Cyan */
+    --primary-glow: rgba(0, 242, 255, 0.4); /* Increased opacity */
+    --primary-hover: #74F5FF;
+    
+    --secondary: #8A2BE2; /* Nebula Purple */
+    --secondary-glow: rgba(138, 43, 226, 0.35); /* Increased opacity */
+    
+    --accent: #FF00E5; /* Pulsar Pink */
+    --success: #00FF94;
+    --error: #FF4F4F;
+    --warning: #FFB800;
+    
+    /* Text Contrast - Critical for legibility */
+    --text-primary: #FFFFFF;    /* Pure White */
+    --text-secondary: #E2E8F0;  /* Bright Silver */
+    --text-muted: #CBD5E1;      /* Brighter Muted Text */
+    --text-highlight: #00F2FF;  /* Use primary for highlights */
+    
+    /* Glassmorphism */
+    --glass-border: rgba(255, 255, 255, 0.18);
+    --glass-blur: 24px;
+    
+    /* Effects */
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 24px;
+    --shadow-glow: 0 0 40px var(--primary-glow);
+    --transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    
+    /* Typography */
+    --font-headline: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+/* Base Reset & Global Styles */
+html, body {
+    background-color: #010409 !important; /* Absolute black fallback */
+    background-attachment: fixed;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+body.deep-space {
+    background: radial-gradient(circle at center, #0d1117 0%, #010409 100%) !important;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Universal Background Effects */
+body.deep-space::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: 
+        radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, var(--secondary-glow) 0%, transparent 40%);
+    z-index: -2;
+    pointer-events: none;
+}
+
+.stars-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: 
+        radial-gradient(1.5px 1.5px at 20px 30px, #fff, rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 40px 70px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 150px 160px, #fff, rgba(0,0,0,0));
+    background-size: 300px 300px;
+    opacity: 0.2;
+    z-index: -1;
+    pointer-events: none;
+}
+
+h1, h2, h3, h4, .brand-text {
+    font-family: var(--font-headline);
+    letter-spacing: -0.02em;
+    font-weight: 600;
+}
+
+.glass-card {
+    background: var(--bg-surface);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+    transition: var(--transition);
+}
+
+.neon-text {
+    color: var(--primary);
+    text-shadow: 0 0 15px var(--primary-glow);
+}
+
+.neon-btn {
+    background: var(--primary) !important;
+    color: #020408 !important;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-family: var(--font-headline);
+    cursor: pointer;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.neon-btn:hover {
+    background: var(--primary-hover) !important;
+    box-shadow: 0 0 40px var(--primary-glow);
+    transform: translateY(-2px);
+}
+
+.neon-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+/* Global Input Polish */
+::placeholder {
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+/* Global Dropdown Polish - Fix for legibility */
+select, option {
+    background-color: #0d141e !important;
+    color: #FFFFFF !important;
+    padding: 10px;
+}
+
+select {
+    color-scheme: dark;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2300F2FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1em;
+    padding-right: 2.5rem !important;
+}
+
+input:focus::placeholder {
+    opacity: 0.4;
+}

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Obsidian | Dashboard</title>
+    
+    <!-- SEO Metadata -->
+    <meta name="description" content="Dashboard Finance Obsidian - Gestão financeira inteligente.">
+    <meta name="author" content="SIA Private">
+    
+    <link rel="stylesheet" href="../theme.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Immediate theme enforcement to prevent white flash */
+        html, body { background-color: #010409 !important; color: #FFFFFF; }
+    </style>
+    <!-- Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="deep-space">
+    <div class="stars-overlay"></div>
+
+    <main id="dashboard" class="hidden">
+        <header class="dashboard-header glass-card">
+            <div class="header-left">
+                <div class="brand-logo-mini">
+                    <div class="logo-icon-mini neon-text">✦</div>
+                    <h1 class="logo-text-mini">Finance <span>Obsidian</span></h1>
+                    <span class="version-tag">v1.0.0</span>
+                </div>
+                <nav class="main-nav">
+                    <button id="nav-home" class="nav-btn active">Início</button>
+                    <button id="nav-reports" class="nav-btn">Relatórios</button>
+                    <button id="nav-projection" class="nav-btn">Projeção</button>
+                </nav>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <p>Olá, <span id="user-name">...</span></p>
+                </div>
+                <button id="logout-btn" class="logout-btn">Sair</button>
+            </div>
+        </header>
+
+        <section class="dashboard-content">
+            <!-- Notification Center (Fase 8) -->
+            <div id="notification-center" class="notification-center hidden">
+                <div class="notif-header">
+                    <span class="notif-icon">🔔</span>
+                    <h3>Central de Alertas</h3>
+                </div>
+                <div id="alerts-container" class="alerts-list">
+                    <!-- Alerts will be injected here -->
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <label>Mês</label>
+                    <select id="filter-month">
+                        <option value="01">Janeiro</option>
+                        <option value="02">Fevereiro</option>
+                        <option value="03">Março</option>
+                        <option value="04">Abril</option>
+                        <option value="05">Maio</option>
+                        <option value="06">Junho</option>
+                        <option value="07">Julho</option>
+                        <option value="08">Agosto</option>
+                        <option value="09">Setembro</option>
+                        <option value="10">Outubro</option>
+                        <option value="11">Novembro</option>
+                        <option value="12">Dezembro</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Ano</label>
+                    <select id="filter-year">
+                        <!-- Years injected by JS -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- VIEW: HOME (Dashboard) -->
+            <div id="view-home" class="view-container">
+                <!-- Summary Cards -->
+                <div class="summary-grid">
+                    <div class="summary-card total-balance">
+                        <h3>Saldo Total</h3>
+                        <p id="total-balance">R$ 0,00</p>
+                        <div class="card-glow"></div>
+                    </div>
+                    <div class="summary-card income">
+                        <h3>Entradas (Mês)</h3>
+                        <p id="total-income">R$ 0,00</p>
+                    </div>
+                    <div class="summary-card expense">
+                        <h3>Saídas (Mês)</h3>
+                        <p id="total-expenses">R$ 0,00</p>
+                    </div>
+                    <div class="summary-card monthly-balance">
+                        <h3>Saldo do Mês</h3>
+                        <p id="monthly-balance">R$ 0,00</p>
+                    </div>
+                </div>
+                
+                <!-- Overview Chart (Sophisticated addition) -->
+                <div class="card overview-chart-card">
+                    <div class="chart-header">
+                        <h2>Análise de Fluxo</h2>
+                        <p class="subtitle">Evolução do seu saldo ao longo do mês</p>
+                    </div>
+                    <div class="chart-container-main">
+                        <canvas id="chart-home-evolution"></canvas>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Form Column -->
+                    <div class="form-column">
+                        <!-- Transaction Form -->
+                        <div class="card form-card">
+                            <h2 id="form-title">Nova Movimentação</h2>
+                            <form id="transaction-form">
+                                <input type="hidden" id="transaction-id">
+                                <div class="input-row">
+                                    <div class="input-group">
+                                        <label>Tipo</label>
+                                        <select id="trans-type" required>
+                                            <option value="entrada">Entrada</option>
+                                            <option value="saida">Saída</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Valor</label>
+                                        <input type="text" id="trans-value" placeholder="R$ 0,00" required>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label>Descrição</label>
+                                    <input type="text" id="trans-desc" placeholder="Ex: Salário, Aluguel..." required>
+                                </div>
+                                <div class="input-row">
+                                    <div class="input-group">
+                                        <label>Categoria</label>
+                                        <input type="text" id="trans-cat" list="category-suggestions" placeholder="Ex: Lazer, Alimentação" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Data</label>
+                                        <input type="date" id="trans-date" required>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label>Observação (Opcional)</label>
+                                    <textarea id="trans-obs" placeholder="Detalhes adicionais..."></textarea>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" id="save-btn">Salvar</button>
+                                    <button type="button" id="cancel-edit" class="hidden btn-secondary">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Account Form (Contas a Vencer) -->
+                        <div class="card form-card mt-20">
+                            <h2 id="account-form-title">Nova Conta a Vencer</h2>
+                            <form id="account-form">
+                                <input type="hidden" id="account-id">
+                                <div class="input-row">
+                                    <div class="input-group">
+                                        <label>Valor</label>
+                                        <input type="text" id="acc-value" placeholder="R$ 0,00" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Vencimento</label>
+                                        <input type="date" id="acc-date" required>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label>Nome da Conta</label>
+                                    <input type="text" id="acc-name" placeholder="Ex: Energia, Internet..." required>
+                                </div>
+                                <div class="input-group">
+                                    <label>Categoria</label>
+                                    <input type="text" id="acc-cat" list="category-suggestions" placeholder="Ex: Fixa, Variável" required>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" id="save-acc-btn">Agendar Conta</button>
+                                    <button type="button" id="cancel-acc-edit" class="hidden btn-secondary">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Fixed Income Form -->
+                        <div class="card form-card mt-20">
+                            <h2 id="fixed-income-form-title">Nova Receita Fixa</h2>
+                            <form id="fixed-income-form">
+                                <div class="input-row">
+                                    <div class="input-group">
+                                        <label>Valor Mensal</label>
+                                        <input type="text" id="fixed-value" placeholder="R$ 0,00" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Dia do Recebimento</label>
+                                        <input type="number" id="fixed-day" min="1" max="31" placeholder="Ex: 5" required>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label>Nome / Fonte</label>
+                                    <input type="text" id="fixed-name" placeholder="Ex: Salário, Freelance..." required>
+                                </div>
+                                <button type="submit">Cadastrar Receita Fixa</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- List Column -->
+                    <div class="list-column">
+                        <!-- Transactions List -->
+                        <div class="card list-card">
+                            <div class="list-header">
+                                <h2>Histórico de Movimentações</h2>
+                            </div>
+                            <div id="transactions-list" class="transactions-list">
+                                <p class="empty-state">Carregando movimentações...</p>
+                            </div>
+                        </div>
+
+                        <!-- Accounts List -->
+                        <div class="card list-card mt-20">
+                            <div class="list-header">
+                                <h2>Contas a Vencer / Pagas</h2>
+                            </div>
+                            <div id="accounts-list" class="transactions-list">
+                                <p class="empty-state">Carregando contas...</p>
+                            </div>
+                        </div>
+
+                        <!-- Fixed Income List -->
+                        <div class="card list-card mt-20">
+                            <div class="list-header">
+                                <h2>Receitas Fixas Mensais</h2>
+                            </div>
+                            <div id="fixed-income-list" class="transactions-list">
+                                <p class="empty-state">Nenhuma receita fixa cadastrada.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: REPORTS (Fase 6) -->
+            <div id="view-reports" class="view-container hidden">
+                <div class="filter-bar reports-filters">
+                    <div class="filter-group">
+                        <label>Filtrar por Categoria</label>
+                        <select id="filter-category">
+                            <option value="all">Todas as Categorias</option>
+                            <!-- Categories will be injected here -->
+                        </select>
+                    </div>
+                </div>
+                <div class="reports-grid">
+                    <!-- Income vs Expenses Bar Chart -->
+                    <div class="card chart-card">
+                        <h2>Entradas vs Saídas</h2>
+                        <div class="chart-container">
+                            <canvas id="chart-income-expenses"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Category Pie Chart -->
+                    <div class="card chart-card">
+                        <h2>Gastos por Categoria</h2>
+                        <div class="chart-container">
+                            <canvas id="chart-categories"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Balance Evolution Line Chart -->
+                    <div class="card chart-card full-width">
+                        <h2>Evolução do Saldo Acumulado</h2>
+                        <div class="chart-container large">
+                            <canvas id="chart-balance-evolution"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: PROJECTION (Fase 7) -->
+            <div id="view-projection" class="view-container hidden">
+                <div class="projection-header">
+                    <h2>Projeção de Saldo Futuro</h2>
+                    <div class="horizon-selector">
+                        <span>Horizonte:</span>
+                        <div class="horizon-options">
+                            <button class="horizon-btn" data-days="7">7 dias</button>
+                            <button class="horizon-btn" data-days="15">15 dias</button>
+                            <button class="horizon-btn active" data-days="30">30 dias</button>
+                            <button class="horizon-btn" data-days="60">60 dias</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <h3>Saldo Atual</h3>
+                        <p id="proj-current-balance">R$ 0,00</p>
+                    </div>
+                    <div class="summary-card income">
+                        <h3>Receitas Previstas</h3>
+                        <p id="proj-future-income">R$ 0,00</p>
+                    </div>
+                    <div class="summary-card expense">
+                        <h3>Contas Pendentes</h3>
+                        <p id="proj-future-expense">R$ 0,00</p>
+                    </div>
+                    <div class="summary-card total-balance">
+                        <h3>Saldo Projetado</h3>
+                        <p id="proj-final-balance">R$ 0,00</p>
+                        <div class="card-glow"></div>
+                    </div>
+                </div>
+
+                <div class="card list-card">
+                    <div class="list-header">
+                        <h2>Eventos Futuros Considerados</h2>
+                        <p class="subtitle">Itens que impactarão seu saldo no período selecionado</p>
+                    </div>
+                    <div id="projection-list" class="transactions-list">
+                        <!-- Projection items will be injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast Notifications (Fase 8) -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Datalists for Suggestions -->
+    <datalist id="category-suggestions"></datalist>
+
+    <script src="script.js"></script>
+</body>
+</html>
