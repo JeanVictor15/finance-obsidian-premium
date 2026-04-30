@@ -12,7 +12,7 @@
 <body>
     <div id="loading">Carregando sua jornada financeira...</div>
 
-    <script src="core/config.js"></script>
+    <script src="js/supabase.js"></script>
     <script>
         const { SUPABASE_URL, SUPABASE_KEY } = window.FINANCE_CONFIG;
         
@@ -25,13 +25,13 @@
                     if (error) throw error;
                     
                     if (session) {
-                        window.location.href = 'dashboard/index.html';
+                        window.location.href = 'pages/dashboard/index.html';
                     } else {
-                        window.location.href = 'login/index.html';
+                        window.location.href = 'pages/login/index.html';
                     }
                 } catch (err) {
                     console.error('Erro na rota:', err);
-                    window.location.href = 'login/index.html'; // Default to login on error
+                    window.location.href = 'pages/login/index.html'; // Default to login on error
                 }
             }
 
