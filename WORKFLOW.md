@@ -14,6 +14,16 @@ Este documento define o ciclo de vida do software para garantir estabilidade e s
 
 ---
 
+## 📂 Organização de Pastas
+
+Para manter o projeto escalável, utilizamos a seguinte estrutura:
+- **/core**: Arquivos globais (configurações, temas) que afetam todo o sistema.
+- **/pages**: (Arquitetura conceitual) Cada funcionalidade principal tem sua própria pasta (`login`, `dashboard`).
+- **/assets**: Imagens, ícones e arquivos estáticos.
+- **Root**: O arquivo `index.html` na raiz serve apenas como roteador inteligente.
+
+---
+
 ## 🔄 Fluxo de Trabalho (Step-by-Step)
 
 ### 1. Fase de Desenvolvimento (`development`)
