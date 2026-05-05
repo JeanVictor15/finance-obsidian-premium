@@ -36,7 +36,7 @@ async function handleLogin(e) {
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
     
-    showToast('Entrando...', 'success');
+    showToast('Entrando', 'success');
 
     const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
